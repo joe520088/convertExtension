@@ -14,7 +14,7 @@ document.getElementById("file").addEventListener('change',function(event)
     $("#result_block").removeClass("hidden").addClass("show");
 
     // handle file and adding small header to show after the file is completed
-    function handeFile(f)
+    function handleFile(f)
     {
         var $title = $("<h4>",
             {
@@ -26,14 +26,33 @@ document.getElementById("file").addEventListener('change',function(event)
         $result.append($title);
         $result.append($fileContent);
 
-        // this part of code is use to calculate how long it read the file 
+        // new Date for automatically convert the time
         var dateBefore = newDate();
         JSZip.loadAsync(f).then(function(zip)
         {
+            // this part of code is use to calculate how long it read the file 
             var dateAfter = new Date();
             $title.append($("<span>",{ "class" : "small", text:"(loaded in " + (dateAfter - dateBefore) + "ms)"}));
-        })
 
+            // this goes through the zip file that use has put in the drop box
+            zip.forEach(function(relativePath, zipEntry)
+            {
+                $fileContent.append($("<li>",{text : zipEntry.name}));
+            });
+            // this part of function is for catch error if the file can't be read
+        },function(e)
+        {
+            $result.append($("<div>",{"class" : "alert alert-danger",
+                text : "Error reading " + f.name + ": " + e.message
+            }));
+        });
+
+    }
+    // going through the file if is needed not actaully reading the data
+    var files = event.target.files;
+    for(var i = 0; i < files.length; i++)
+    {
+        handleFile(files[i]);
     }
 
 });
