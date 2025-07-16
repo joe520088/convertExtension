@@ -26,6 +26,14 @@ document.getElementById("file").addEventListener('change',function(event)
         $result.append($title);
         $result.append($fileContent);
 
+        // this part of code is use to calculate how long it read the file 
+        var dateBefore = newDate();
+        JSZip.loadAsync(f).then(function(zip)
+        {
+            var dateAfter = new Date();
+            $title.append($("<span>",{ "class" : "small", text:"(loaded in " + (dateAfter - dateBefore) + "ms)"}));
+        })
+
     }
 
 });
