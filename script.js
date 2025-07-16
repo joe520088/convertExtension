@@ -1,4 +1,4 @@
-"use stric";
+"use strict";
 var $result = $("#result");
 
 document.getElementById("file").addEventListener('change',function(event)
@@ -27,7 +27,7 @@ document.getElementById("file").addEventListener('change',function(event)
         $result.append($fileContent);
 
         // new Date for automatically convert the time
-        var dateBefore = newDate();
+        var dateBefore = new Date();
         JSZip.loadAsync(f).then(function(zip)
         {
             // this part of code is use to calculate how long it read the file 
