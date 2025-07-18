@@ -10,6 +10,20 @@
         padding: 10px;
         margin: 10px;
     }
+    .box:hover
+    {
+        background-color: #87ceeb;
+    }
+
+    #file
+    {
+        display: none;
+    }
+
+    .hidden
+    {
+        display: none;
+    }
     </style>
     
     <meta charset="UTF-8">
@@ -19,9 +33,9 @@
 <body>
     <div>
         <h2>powerpointer converter<h2>
-        <div class ="box">
-            lease insert the file you wanted to convert
-            <input type="file" id="file" name="file"><br>
+        <div class ="box" onclick="document.getElementById('file').click();">
+            Click here to insert your PowerPoint file
+            <input type="file" id="file" name="file" accept=".ppt,.pptx"><br>
         </div>
         <div id ="result_block" class="hidden">
             <h3>Content: </h3>

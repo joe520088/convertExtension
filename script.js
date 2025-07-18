@@ -16,6 +16,14 @@ document.getElementById("file").addEventListener('change',function(event)
     // handle file and adding small header to show after the file is completed
     function handleFile(f)
     {
+         // Check if file is a PowerPoint file
+        if (!f.name.match(/\.(ppt|pptx)$/i)) {
+            $result.append($("<div>", {
+                "class": "alert alert-danger",
+                text: "Error: " + f.name + " is not a PowerPoint file. Please select a .ppt or .pptx file."
+            }));
+            return;
+        }
         var $title = $("<h4>",
             {
                 text : f.name
