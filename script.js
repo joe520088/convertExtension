@@ -38,6 +38,23 @@ document.getElementById("file").addEventListener('change',function(event)
         var dateBefore = new Date();
         JSZip.loadAsync(f).then(function(zip)
         {
+            // Example: Read and parse the first slide's XML
+            zip.file("ppt/slides/slide1.xml").async("text").then(function(xmlText) 
+            {
+            // Use fast-xml-parser to parse the XML text
+            const parser = new XMLParser(); 
+            const slideObj = parser.parse(xmlText);
+           
+            // Convert the object back to XML string for microsoft word 
+            const builder = new XMLBuilder();
+            const xmlString = builder.build(slideObj);
+
+            // Optionally, show some info in your UI
+            $fileContent.append($("<li>", { text: "Parsed slide1.xml" }));
+            }).catch(function(err) 
+            {
+            $fileContent.append($("<li>", { text: "Could not read slide1.xml: " + err.message }));
+            });
             // this part of code is use to calculate how long it read the file 
             var dateAfter = new Date();
             $title.append($("<span>",{ "class" : "small", text:"(loaded in " + (dateAfter - dateBefore) + "ms)"}));
