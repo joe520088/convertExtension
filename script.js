@@ -32,6 +32,44 @@ document.getElementById("file").addEventListener('change',function(event)
             else if (typeof child === "object" && child !== null) collectSlideTexts(child, out);
         }
     }
+        // Build a .docx where each slide is a heading + bullet list and download it
+        async function exportSlidesToDocx(slideChunks, filename = "slides.docx") {
+        const { Document, Packer, Paragraph, HeadingLevel } = window.docx;
+
+        const docChildren = [];
+
+         slideChunks.forEach((slide, idx) => {
+        // Slide heading
+        docChildren.push(
+            new Paragraph({
+            text: `Slide ${idx + 1}`,
+            heading: HeadingLevel.HEADING_1,
+        })
+      );
+
+      // Bullet each text chunk (skip empties/whitespace)
+        slide
+            .filter(s => s && s.trim().length > 0)
+            .forEach(s => {
+                docChildren.push(
+                new Paragraph({
+                text: s,
+                bullet: { level: 0 }
+            })
+          );
+        });
+
+      // Spacer between slides
+      docChildren.push(new Paragraph({ text: "" }));
+    });
+
+    const doc = new Document({
+      sections: [{ properties: {}, children: docChildren }]
+    });
+
+    const blob = await Packer.toBlob(doc);
+    saveAs(blob, filename);
+  }
 
     // handle file and adding small header to show after the file is completed
     function handleFile(f)
