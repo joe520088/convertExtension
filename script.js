@@ -13,6 +13,26 @@ document.getElementById("file").addEventListener('change',function(event)
     // making sure the class is removed to completely wiped it off 
     $("#result_block").removeClass("hidden").addClass("show");
 
+    // function to collect all the text from the slide
+    function collectSliderText(node, out)
+    {
+        if(!node || typeof node !== 'object') return;
+
+        if (node["a:t"] != null) 
+        {
+            const v = node["a:t"];
+            if (Array.isArray(v)) v.forEach(s => { if (typeof s === "string") out.push(s); });
+            else if (typeof v === "string") out.push(v);
+        }
+        for (const k in node) 
+        {
+            if (!Object.prototype.hasOwnProperty.call(node, k)) continue;
+            const child = node[k];
+            if (Array.isArray(child)) child.forEach(c => collectSlideTexts(c, out));
+            else if (typeof child === "object" && child !== null) collectSlideTexts(child, out);
+        }
+    }
+
     // handle file and adding small header to show after the file is completed
     function handleFile(f)
     {
