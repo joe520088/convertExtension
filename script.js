@@ -69,7 +69,10 @@ document.getElementById("file").addEventListener('change',function(event)
 
     const blob = await Packer.toBlob(doc);
     saveAs(blob, filename);
-  }
+    }
+
+
+
 
     // handle file and adding small header to show after the file is completed
     function handleFile(f)
@@ -96,40 +99,66 @@ document.getElementById("file").addEventListener('change',function(event)
         var dateBefore = new Date();
         JSZip.loadAsync(f).then(function(zip)
         {
+            const { XMLParser, XMLBuilder } = (window.fxparser || window);
+
             const parser = new XMLParser();
             const builder = new XMLBuilder();
 
             const slideFiles = Object.keys(zip.files).filter(name => /^ppt\/slides\/slide\d+\.xml$/i.test(name));
 
-            Promise.all(slideFiles.map(name =>
+            // ✅ Return the Promise so the outer chain waits
+            return Promise.all(
+            slideFiles.map(name =>
             zip.file(name).async("text").then(xml => {
-                const obj = parser.parse(xml);
-                const xmlStr = builder.build(obj);
-                $fileContent.append($("<li>", { text: `Parsed ${name}` }));
-                return { name, slideObj: obj };
+            const obj = parser.parse(xml);
+            // const xmlStr = builder.build(obj); // not needed unless you want a roundtrip
+            $fileContent.append($("<li>", { text: `Parsed ${name}` }));
+            return { name, slideObj: obj };
             }).catch(err => {
-                $fileContent.append($("<li>", { text: `Error parsing ${name}: ${err.message}` }));
-            return null;
-        })
-        )).then(parsedSlides => {
-        console.log("Slides:", parsedSlides.filter(Boolean));
-        });
-            // this part of code is use to calculate how long it read the file 
-            var dateAfter = new Date();
-            $title.append($("<span>",{ "class" : "small", text:"(loaded in " + (dateAfter - dateBefore) + "ms)"}));
+            $fileContent.append($("<li>", { text: `Error parsing ${name}: ${err.message}` }));
+      return null;
+    })
+  )
+)
+    // Also return `zip` so we can still use it later (for listing files, etc.).
+    // Continue the chain AFTER returning { zip, parsedSlides } from inside JSZip.loadAsync(...)
+    }).then(({ zip, parsedSlides }) => {
+    // 1) Use only successful slide parses
+    const clean = parsedSlides.filter(Boolean);
 
-            // this goes through the zip file that use has put in the drop box
-            zip.forEach(function(relativePath, zipEntry)
-            {
-                $fileContent.append($("<li>",{text : zipEntry.name}));
-            });
-            // this part of function is for catch error if the file can't be read
-        },function(e)
-        {
-            $result.append($("<div>",{"class" : "alert alert-danger",
-                text : "Error reading " + f.name + ": " + e.message
-            }));
-        });
+    // 2) Extract text from each slide object
+    const slideTextChunks = clean.map(s => {
+    const out = [];
+    collectSlideTexts(s.slideObj, out); // <-- your helper from earlier
+    return out;
+  });
+
+  // 3) Export to Word (.docx)
+  exportSlidesToDocx(
+    slideTextChunks,
+    (f.name.replace(/\.(pptx?|zip)$/i, "") || "slides") + ".docx"
+  );
+
+  // 4) Timing AFTER all parsing + export
+  var dateAfter = new Date();
+  $title.append($("<span>", {
+    "class": "small",
+    text: " (loaded in " + (dateAfter - dateBefore) + "ms)"
+  }));
+
+  // 5) (Optional) still list files from the zip
+  zip.forEach(function (relativePath, zipEntry) {
+    $fileContent.append($("<li>", { text: zipEntry.name }));
+  });
+
+}).catch(function (e) {
+  // Unified error handler for zip open and any slide parse failures not handled above
+  $result.append($("<div>", {
+    "class": "alert alert-danger",
+    text: "Error reading " + f.name + ": " + e.message
+  }));
+});
+
 
     }
     // going through the file if is needed not actaully reading the data
