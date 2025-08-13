@@ -1,4 +1,17 @@
 "use strict";
+
+//handling click in the index file since it was removed
+const fileBox = document.getElementById("fileBox");
+if(fileBox)
+{
+    fileBox.addEventListener('click', () => {
+      const picker = document.getElementById("file");
+      if (picker) {
+        picker.click();
+      }
+    });
+}
+
 var $result = $("#result");
 
 document.getElementById("file").addEventListener('change',function(event)
