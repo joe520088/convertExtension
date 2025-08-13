@@ -1,6 +1,8 @@
 {
-    "name": "File converter",
-    "version": "1.0.0",
-    "description": "This is an extension that convert the powerpooint file into google docs or micrssoft word"
-
+  "manifest_version": 3,
+  "name": "Convert Extension",
+  "version": "0.1.0",
+  "action": { "default_popup": "popup.html", "default_title": "Convert" },
+  "permissions": []
 }
+
