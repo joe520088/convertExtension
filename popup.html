@@ -1,4 +1,56 @@
-<!doctype html>
-<meta charset="utf-8">
-<title>Test popup</title>
-<h1>Popup loaded ✅</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        .box{
+        width: 100px;
+        height: 50px;
+        background-color: lightblue;
+        border:1px solid blue;
+        padding: 10px;
+        margin: 10px;
+    }
+    .box:hover
+    {
+        background-color: #87ceeb;
+    }
+
+    #file
+    {
+        display: none;
+    }
+
+    .hidden
+    {
+        display: none;
+    }
+    </style>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+</head>
+
+<script src ="https://cdnjs.cloudflare.com/ajax/libs/fast-xml-parser/5.2.5/fxparser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="script.js"></script>
+
+<body>
+    <div>
+        <h2>powerpointer converter</h2>
+        <div class ="box" id="fileBox">
+            Click here to insert your PowerPoint file
+            <input type="file" id="file" name="file" accept=".ppt,.pptx"><br>
+        </div>
+        <div id ="result_block" class="hidden">
+            <h3>Content: </h3>
+            <div id="result"></div>
+        </div>
+    </div>
+    
+</body>
+
+</html>
