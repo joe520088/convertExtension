@@ -9,6 +9,11 @@
         border:1px solid blue;
         padding: 10px;
         margin: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer; 
+        user-select: none;
     }
     .box:hover
     {
@@ -29,14 +34,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title></title>
+    
+    <script src="./lib/jquery-3.7.1.min.js"></script>
+
+    <!-- file for parser and builder-->
+    <script src="./lib/fxparser.min.js"></script>
+    <script src="./lib/jszip.min.js"></script>
+    <script src="./lib/docx.umd.js"></script>   
+    <script src="./lib/FileSaver.min.js"></script>
+
+    <script src="./popup.js"></script>
+
 </head>
 
-<script src ="https://cdnjs.cloudflare.com/ajax/libs/fast-xml-parser/5.2.5/fxparser.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="script.js"></script>
+
 
 <body>
     <div>
