@@ -27,7 +27,7 @@ document.getElementById("file").addEventListener('change',function(event)
     $("#result_block").removeClass("hidden").addClass("show");
 
     // function to collect all the text from the slide
-    function collectSliderText(node, out)
+    function collectSliderTexts(node, out)
     {
         if(!node || typeof node !== 'object') return;
 
@@ -91,7 +91,7 @@ document.getElementById("file").addEventListener('change',function(event)
     function handleFile(f)
     {
          // Check if file is a PowerPoint file
-        if (!f.name.match(/\.(ppt|pptx)$/i)) {
+        if (!/\.pptx?$/i.test(f.name)) {
             $result.append($("<div>", {
                 "class": "alert alert-danger",
                 text: "Error: " + f.name + " is not a PowerPoint file. Please select a .ppt or .pptx file."
@@ -119,7 +119,7 @@ document.getElementById("file").addEventListener('change',function(event)
 
             const slideFiles = Object.keys(zip.files).filter(name => /^ppt\/slides\/slide\d+\.xml$/i.test(name));
 
-            // ✅ Return the Promise so the outer chain waits
+            // Return the Promise so the outer chain waits
             return Promise.all(
             slideFiles.map(name =>
             zip.file(name).async("text").then(xml => {
@@ -128,13 +128,12 @@ document.getElementById("file").addEventListener('change',function(event)
             $fileContent.append($("<li>", { text: `Parsed ${name}` }));
             return { name, slideObj: obj };
             }).catch(err => {
-            $fileContent.append($("<li>", { text: `Error parsing ${name}: ${err.message}` }));
+            $fileContent.append($("<li>", { text: `Error parsing ${err.message}: ${err.message}` }));
       return null;
     })
   )
 )
-    // Also return `zip` so we can still use it later (for listing files, etc.).
-    // Continue the chain AFTER returning { zip, parsedSlides } from inside JSZip.loadAsync(...)
+
     }).then(({ zip, parsedSlides }) => {
     // 1) Use only successful slide parses
     const clean = parsedSlides.filter(Boolean);
