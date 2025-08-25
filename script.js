@@ -114,8 +114,8 @@ document.getElementById("file").addEventListener('change',function(event)
         {
             const { XMLParser, XMLBuilder } = (window.fxparser || window);
 
-            const parser = new XMLParser();
-            const builder = new XMLBuilder();
+            const parser = new (window.fxparser?.XMLParser || window.XMLParser)();
+            const builder = new (window.fxparser?.XMLParser || window.XMLParser)();
 
             const slideFiles = Object.keys(zip.files).filter(name => /^ppt\/slides\/slide\d+\.xml$/i.test(name));
 
@@ -132,26 +132,26 @@ document.getElementById("file").addEventListener('change',function(event)
       return null;
     })
   )
-)
+).then(parsedSlides => ({zip, parsedSlides}));
 
     }).then(({ zip, parsedSlides }) => {
-    // 1) Use only successful slide parses
+    // 1 Use only successful slide parses
     const clean = parsedSlides.filter(Boolean);
 
-    // 2) Extract text from each slide object
+    // 2 Extract text from each slide object
     const slideTextChunks = clean.map(s => {
     const out = [];
     collectSlideTexts(s.slideObj, out); // <-- your helper from earlier
     return out;
   });
 
-  // 3) Export to Word (.docx)
+  // 3 Export to Word (.docx)
   exportSlidesToDocx(
     slideTextChunks,
     (f.name.replace(/\.(pptx?|zip)$/i, "") || "slides") + ".docx"
-  );
+  ).then;
 
-  // 4) Timing AFTER all parsing + export
+  // 4 Timing AFTER all parsing + export
   var dateAfter = new Date();
   $title.append($("<span>", {
     "class": "small",
