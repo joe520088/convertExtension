@@ -27,7 +27,7 @@ document.getElementById("file").addEventListener('change',function(event)
     $("#result_block").removeClass("hidden").addClass("show");
 
     // function to collect all the text from the slide
-    function collectSliderTexts(node, out)
+    function collectSlideTexts(node, out)
     {
         if(!node || typeof node !== 'object') return;
 
@@ -115,7 +115,7 @@ document.getElementById("file").addEventListener('change',function(event)
             const { XMLParser, XMLBuilder } = (window.fxparser || window);
 
             const parser = new (window.fxparser?.XMLParser || window.XMLParser)();
-            const builder = new (window.fxparser?.XMLParser || window.XMLParser)();
+            const builder = new (window.fxparser?.XMLParser || window.XMLBuilder)();
 
             const slideFiles = Object.keys(zip.files).filter(name => /^ppt\/slides\/slide\d+\.xml$/i.test(name));
 
@@ -149,7 +149,7 @@ document.getElementById("file").addEventListener('change',function(event)
   exportSlidesToDocx(
     slideTextChunks,
     (f.name.replace(/\.(pptx?|zip)$/i, "") || "slides") + ".docx"
-  ).then;
+  );
 
   // 4 Timing AFTER all parsing + export
   var dateAfter = new Date();
